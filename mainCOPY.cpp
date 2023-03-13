@@ -9503,23 +9503,7 @@ public:
 		printf("max_blocks            : Specifies the maximum number of blocks to read.\r\n");
 		printf("scan                  : Toggles scanning the blockchain headers pressing a key will pause or abort the scan.\r\n");
 		printf("process               : Toggle processing all blocks; warning uses a lot of memory!..\r\n");
-		printf("statistics            : Enables gathering detailed address/transaction statistics on the block chain\r\n");
-		printf("\r\n");
-		printf("stop_scan             : Stop's the scan of the blockchain headers and just builds the blockchain from where we are at so far.\r\n");
-		printf("block <number>        : Will print the contents of this block.\r\n");
-		printf("counts                : Report block and transaction counts.\r\n");
-		printf("by_day                : Reports statistics by day.\r\n");
-		printf("by_month              : Reports statistics by month.\r\n");
-		printf("by_year               : Reports statistics by year.\r\n");
-		printf("top_balance <n>       : Will output the addresses with the highest balance up to <n>\r\n");
-		printf("min_balance <n>       : Specifies the minimum balance to use when generating a report. Default is 1BTC\r\n");
-		printf("oldest <n>            : Outputs the <n> oldest addresses higher than min_balance\r\n");
-		printf("adr <n>               : Outputs the transaction history relative to a specific bitcoinaddres.\r\n");
-		printf("zombie <days>         : Report statitics about zombie coins; contents of addresses not used since this many days.\r\n");
-		printf("record_addresses      : Toggles whether or not to record addresses when computing statistics.\r\n");
-		printf("load_record           : Debugging feature, tries to load previously recorded addresses.\r\n");
-		printf("help                  : Repeat these commands.\r\n");
-		printf("exit, quit, or bye    : Will exit this tool\r\n");
+		
 	}
 
 	void stopScanning(void)
@@ -9531,14 +9515,17 @@ public:
 		printf("Stopped scanning block headers early. Built block-chain with %d blocks found..\r\n", mLastBlockScan);
 	}
 
-	bool process(void)
+	bool process(int option)
 	{
 		uint32_t argc;
-		//const char **argv = getInputString(argc);
-        const char **argv;
-		if ( 0 )
+		// const char **argv = getInputString(argc);
+		const char **argv;
+
+
+		if ( 1 )
 		{
-			if ( strcmp(argv[0],"scan") == 0 )
+			// if ( strcmp(argv[0],"scan") == 0 )
+			if(option == 1)
 			{
 				if ( mMode == CM_SCAN )
 				{
@@ -9551,82 +9538,7 @@ public:
 					mMode = CM_SCAN;
 				}
 			}
-			else if ( strcmp(argv[0],"exit") == 0 ||  strcmp(argv[0],"bye") == 0 || strcmp(argv[0],"quit") == 0  )
-			{
-				mMode = CM_EXIT;
-			}
-			else if ( strcmp(argv[0],"stop_scan") == 0 )
-			{
-				if ( mFinishedScanning )
-				{
-					printf("Already finished scanning the block-chain headers.  Found %d blocks.\r\n", mLastBlockScan );
-				}
-				else
-				{
-					stopScanning();
-				}
-			}
-			else if ( strcmp(argv[0],"help") == 0 )
-			{
-				help();
-			}
-			else if ( strcmp(argv[0],"max_blocks") == 0 )
-			{
-				if ( argc >= 2 )
-				{
-					mMaxBlock = atoi(argv[1]);
-					if ( mMaxBlock < 1 ) mMaxBlock = 1;
-					printf("Maximum block scan set to %d\r\n", mMaxBlock );
-				}
-			}
-			else if ( strcmp(argv[0],"by_day") == 0 )
-			{
-				mStatResolution = SR_DAY;
-				printf("Will accumulate statistics on a per-day basis.\r\n");
-				if ( !mProcessTransactions )
-				{
-					printf("Note: You must enable 'statistics' for this to take effect.\r\n");
-				}
-			}
-			else if ( strcmp(argv[0],"by_month") == 0 )
-			{
-				mStatResolution = SR_MONTH;
-				printf("Will accumulate statistics on a monthly basis.\r\n");
-				if ( !mProcessTransactions )
-				{
-					printf("Note: You must enable 'statistics' for this to take effect.\r\n");
-				}
-			}
-			else if ( strcmp(argv[0],"by_year") == 0 )
-			{
-				mStatResolution = SR_YEAR;
-				printf("Will accumulate statistics on an annual basis.\r\n");
-				if ( !mProcessTransactions )
-				{
-					printf("Note: You must enable 'statistics' for this to take effect.\r\n");
-				}
-			}
-			else if ( strcmp(argv[0],"record_addresses") == 0 )
-			{
-				mRecordAddresses = mRecordAddresses ? false : true;
-				printf("record_addresses set to %s\r\n", mRecordAddresses ? "true" : "false");
-			}
-			else if ( strcmp(argv[0],"adr") == 0 )
-			{
-				if ( argc == 1 )
-				{
-					printf("You must supply an address to output.\r\n");
-				}
-				else
-				{
-					for (uint32_t i=1; i<argc; i++)
-					{
-						const char *adr = argv[i];
-						mBlockChain->printAddress(adr);
-					}
-				}
-			}
-			else if ( strcmp(argv[0],"process") == 0 )
+			else if ( option == 2 )
 			{
 				if ( mMode == CM_PROCESS )
 				{
@@ -9646,141 +9558,25 @@ public:
 					mProcessTransactions ? "true":"false");
 				}
 			}
-			else if ( strcmp(argv[0],"statistics") == 0 )
+			else if ( option == 3 )  // block <num>
 			{
-				mProcessTransactions = mProcessTransactions ? false : true;
-				if ( mProcessTransactions )
+				int BlockCount = mBlockChain->getBlockCount();
+				for (uint32_t i=0; i<BlockCount; i++)
 				{
-					printf("Block Processing will gather statistics.\r\n");
-					printf("*** WARNING : This will consume an enormous amount of memory! ***\r\n");
-				}
-				else
-				{
-					printf("Block processing will not gather statistics.\r\n");
-				}
-			}
-			else if ( strcmp(argv[0],"load_record") == 0 )
-			{
-				if ( mAddresses )
-				{
-					mAddresses->release();
-					mAddresses = NULL;
-				}
-				printf("Loading previously recorded addresses from file 'BlockChainAddresses.bin\r\n");
-				mAddresses = createBlockChainAddresses("BlockChainAddresses.bin");
-			}
-			else if ( strcmp(argv[0],"min_balance") == 0 )
-			{
-				if ( argc == 1 )
-				{
-					printf("No minimum balance specified, defaulting to 1btc.\r\n");
-				}
-				else
-				{
-					mMinBalance = (uint32_t)atoi(argv[1]);
-					if ( mMinBalance < 1 )
-					{
-						mMinBalance = 1;
-					}
-					else
-					{
-						if ( mMinBalance > 1000000 )
-						{
-							mMinBalance = 1000000;
-						}
-					}
-					printf("Minimum balance set to %d bitcoins.\r\n", mMinBalance );
-				}
-			}
-			else if ( strcmp(argv[0],"top_balance") == 0 )
-			{
-				uint32_t tcount = 100;
-				if ( argc >= 2 )
-				{
-					tcount = atoi(argv[1]);
-					if ( tcount < 1 )
-					{
-						tcount = 1;
-					}
-				}
-				printf("Printing the most valuable %d bitcoin addresses with a balance of more than %d bitcoins.\r\n", tcount, mMinBalance );
-				mBlockChain->printTopBalances(tcount,mMinBalance);
-			}
-			else if ( strcmp(argv[0],"oldest") == 0 )
-			{
-				uint32_t tcount = 100;
-				if ( argc >= 2 )
-				{
-					tcount = atoi(argv[1]);
-					if ( tcount < 1 )
-					{
-						tcount = 1;
-					}
-				}
-				printf("Printing the %d oldest bitcoin addresses with a balance of more than %d bitcoins.\r\n", tcount, mMinBalance );
-				mBlockChain->printOldest(tcount,mMinBalance);
-			}
-			else if ( strcmp(argv[0],"zombie") == 0 )
-			{
-				uint32_t zdays = 365;
-				if ( argc >=2 )
-				{
-					zdays = atoi(argv[1]);
-					if ( zdays < 1 )
-					{
-						zdays = 1;
-					}
-				}
-				printf("Generating Zombie Count for addresses older than %d days with a balance of more than %d bitcoins.\r\n", zdays, mMinBalance );
-				mBlockChain->zombieReport(zdays,mMinBalance);
-			}
-			else if ( strcmp(argv[0],"by_day") == 0 )
-			{
-				mStatResolution = SR_DAY;
-				printf("Gathering statistics every day.\r\n");
-			}
-			else if ( strcmp(argv[0],"by_month") == 0 )
-			{
-				mStatResolution = SR_MONTH;
-				printf("Gathering statistics every month.\r\n");
-			}
-			else if ( strcmp(argv[0],"by_year") == 0 )
-			{
-				mStatResolution = SR_YEAR;
-				printf("Gathering statistics every year.\r\n");
-			}
-			else if ( strcmp(argv[0],"counts") == 0 )
-			{
-				mBlockChain->reportCounts();
-			}
-			else if ( strcmp(argv[0],"block") == 0 )
-			{
-				if ( argc == 1 )
-				{
+					// uint32_t index = (uint32_t)atoi(argv[i]);
+					mCurrentBlock = getBlock(i);
 					if ( mCurrentBlock )
 					{
-						mBlockChain->printBlock(mCurrentBlock);
-						mCurrentBlock = mBlockChain->readBlock(mCurrentBlock->blockIndex+1);
-					}
-				}
-				else
-				{
-					for (uint32_t i=1; i<argc; i++)
-					{
-						uint32_t index = (uint32_t)atoi(argv[i]);
-						mCurrentBlock = getBlock(index);
-						if ( mCurrentBlock )
-						{
 							mBlockChain->printBlock(mCurrentBlock);
-						}
 					}
 				}
+				
 			}
 		}
 		switch ( mMode )
 		{
 			case CM_PROCESS:
-				if ( mProcessBlock < mBlockChain->getBlockCount() )
+				while ( mProcessBlock < mBlockChain->getBlockCount() )
 				{
 					mCurrentBlock = mBlockChain->readBlock(mProcessBlock);
 					if ( mCurrentBlock && mProcessTransactions )
@@ -9840,8 +9636,8 @@ public:
 						printf("Processed block #%d of %d total.\r\n", mProcessBlock, mBlockChain->getBlockCount() );
 					}
 				}
-				else
-				{
+				
+				
 					printf("Finished processing all blocks in the blockchain.\r\n");
 					mBlockChain->reportCounts();
 					if ( mProcessTransactions )
@@ -9853,11 +9649,16 @@ public:
 					}
 					mMode = CM_NONE;
 					mProcessBlock = 0;
-				}
+				
 				break;
 			case CM_SCAN:
 				{
-					bool ok = mBlockChain->readBlockHeaders(mMaxBlock,mLastBlockScan);
+					printf("CM_SCAN CASE\n");
+					bool ok = 1;
+					while(ok){
+						ok =mBlockChain->readBlockHeaders(mMaxBlock,mLastBlockScan);
+					}
+					printf("%d\n",mLastBlockScan);
 					if ( !ok )
 					{
 						mFinishedScanning = true;
@@ -9896,18 +9697,12 @@ public:
 	BlockChainAddresses		*mAddresses;
 };
 
-int main()
+int main(int argc,const char **argv)
 {
-	const char *dataPath = ".";
-		dataPath = "data";
-	
-
+	const char *dataPath = "data";
 	BlockChainCommand bc(dataPath);
-
-	bc.process();
-    //bc.mMode = CM_SCAN;
-    bc.process();
-    bc.mMode = CM_PROCESS;
-    bc.process();
+	bc.process(1) ;
+	bc.process(2) ;
+	bc.process(3) ;
 	return 0;
 }
