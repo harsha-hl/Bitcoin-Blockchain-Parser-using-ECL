@@ -1,0 +1,7 @@
+{
+    "ecl.launchConfiguration": "localhost",
+    "ecl.targetCluster": {},
+    "files.associations": {
+        "string": "cpp"
+    }
+}

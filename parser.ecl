@@ -1,6 +1,8 @@
 
 
 INTEGER traceDataset() := EMBED(C++)
+#include <bits/stdc++.h>
+#include<iostream>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -14,6 +16,7 @@ INTEGER traceDataset() := EMBED(C++)
 #include <assert.h>
 using namespace std;
 
+FILE *ocsv;
 
 // SHA256.h
 #ifndef SHA256_H
@@ -6751,6 +6754,45 @@ public:
 		{
 			for (uint32_t i=0; i<32; i++)
 			{
+        //fprintf(ocsv,"%02x",hash[31-i]);
+				printf("%02x", hash[31-i] );
+			}
+       //fprintf(ocsv,"\r\n");
+		}
+		else
+		{
+			printf("NULL HASH");
+		}
+	}
+  
+  	void printReverseHash1(const uint8_t *hash)
+	{
+		if ( hash )
+		{
+			for (uint32_t i=0; i<32; i++)
+			{
+        fprintf(ocsv,"%02x",hash[31-i]);
+				printf("%02x", hash[31-i] );
+			}
+      fprintf(ocsv,",");
+		}
+		else
+		{
+			printf("NULL HASH");
+		}
+	}
+
+	  	string printReverseHash2(const uint8_t *hash)
+	{
+		string ans = "";
+    	char arr[64];
+
+		if ( hash )
+		{
+			for (uint32_t i=0; i<32; i++)
+			{
+				sprintf(arr, "%02x", hash[31-i]);
+				ans.append(arr);
 				printf("%02x", hash[31-i] );
 			}
 		}
@@ -6758,6 +6800,7 @@ public:
 		{
 			printf("NULL HASH");
 		}
+		return ans;
 	}
 
 
@@ -6768,49 +6811,73 @@ public:
 		printf("Block #%s\r\n", formatNumber(block->blockIndex) );
 
 		printf("ComputedBlockHash: ");
-		printReverseHash(block->computedBlockHash);
 		printf("\r\n");
 
 		if ( block->previousBlockHash )
 		{
 			printf("PreviousBlockHash:");
-			printReverseHash(block->previousBlockHash);
 			printf("\r\n");
 		}
 		if ( block->nextBlockHash )
 		{
 			printf("NextBlockHash:");
-			printReverseHash(block->nextBlockHash);
 			printf("\r\n");
 		}
 
 
 		printf("Merkle root: ");
-		printReverseHash(block->merkleRoot);
 		printf("\r\n");
 
 		printf("Number of Transactions: %s\r\n", formatNumber(block->transactionCount) );
+    
 		printf("Timestamp : %s\r\n", getTimeString(block->timeStamp ) );
+    
 		printf("Bits: %d Hex: %08X\r\n", block->bits, block->bits );
 		printf("Size: %0.10f KB or %s bytes.\r\n", (float)block->blockLength / 1024.0f, formatNumber(block->blockLength) );
 		printf("Version: %d\r\n", block->blockFormatVersion );
+    
 		printf("Nonce: %u\r\n", block->nonce );
+
 		printf("BlockReward: %f\r\n", (float)block->blockReward / ONE_BTC );
 
+    
+		//fprintf(ocsv,"\r\n");
+    	float br = (float)block->blockReward / ONE_BTC;
 		printf("%s transactions\r\n", formatNumber(block->transactionCount) );
 		for (uint32_t i=0; i<block->transactionCount; i++)
 		{
+			printReverseHash1(block->computedBlockHash);
+			printReverseHash1(block->previousBlockHash);
+			printReverseHash1(block->nextBlockHash);
+			printReverseHash1(block->merkleRoot);
+    		fprintf(ocsv,"%s,", getTimeString(block->timeStamp ));
+    		fprintf(ocsv,"%u,", block->nonce);
+    		fprintf(ocsv,"%f,", br);
+
+			string inputAddresses = "";
+			string inputATransHash = "";
+			string inputAmount = "";
+			string outputAdresses = "";
+			string outputAmount = "";
+
+
+
+
+
 			const BlockTransaction &t = block->transactions[i];
 			printf("Transaction %s : %s inputs %s outputs. VersionNumber: %d\r\n", formatNumber(i), formatNumber(t.inputCount), formatNumber(t.outputCount), t.transactionVersionNumber );
 			printf("TransactionHash: ");
 			printReverseHash(t.transactionHash);
+			printReverseHash1(t.transactionHash);
+
 			printf("\r\n");
 			for (uint32_t i=0; i<t.inputCount; i++)
 			{
 				const BlockInput &input = t.inputs[i];
 				printf("    Input %s : ResponsScriptLength: %s TransactionIndex: %s : TransactionHash: ", formatNumber(i), formatNumber(input.responseScriptLength), formatNumber(input.transactionIndex) );
 
-				printReverseHash(input.transactionHash);
+				inputATransHash += printReverseHash2(input.transactionHash);
+				inputATransHash += " ";
 
 				printf("\r\n");
 
@@ -6844,6 +6911,13 @@ public:
 								}
 								if ( ok )
 								{
+									inputAddresses.append(scratch);
+									inputAddresses += " ";
+
+									float b = (float)o.value / ONE_BTC;
+									inputAmount += (to_string(b));
+									inputAmount += " ";
+
 									printf("     Spending From Public Key: %s in the amount of: %0.4f\r\n", scratch, (float)o.value / ONE_BTC );
 								}
 								else
@@ -6866,6 +6940,9 @@ public:
 			for (uint32_t i=0; i<t.outputCount; i++)
 			{
 				const BlockOutput &output = t.outputs[i];
+				float c = (float)output.value / ONE_BTC;
+				outputAmount += (to_string(c));
+				outputAmount += " ";
 				printf("    Output: %s : %f BTC : ChallengeScriptLength: %s\r\n", formatNumber(i), (float)output.value / ONE_BTC, formatNumber(output.challengeScriptLength) );
 				if ( output.publicKey )
 				{
@@ -6883,6 +6960,8 @@ public:
 					}
 					if ( ok )
 					{
+						outputAdresses.append(scratch);
+						outputAdresses += " ";
 						printf("PublicKey: %s : %s\r\n", scratch, output.isRipeMD160 ? "RIPEMD160" : "ECDSA" );
 					}
 					else
@@ -6895,7 +6974,33 @@ public:
 					printf("ERROR: Unable to derive a public key for this output!\r\n");
 				}
 			}
+			char arr[inputAddresses.length() + 1];
+			strcpy(arr, inputAddresses.c_str());
+			fprintf(ocsv,"%s,", arr);
+
+			char arr2[inputATransHash.length() + 1];
+			strcpy(arr2, inputATransHash.c_str());
+			fprintf(ocsv,"%s,", arr2);
+    		//fprintf(ocsv,"%s,", inputATransHash);
+
+			char arr3[inputAmount.length() + 1];
+			strcpy(arr3, inputAmount.c_str());
+			fprintf(ocsv,"%s,", arr3);
+    		//fprintf(ocsv,"%s,", inputAmount);
+
+			char arr4[outputAdresses.length() + 1];
+			strcpy(arr4, outputAdresses.c_str());
+			fprintf(ocsv,"%s,", arr4);
+    		//fprintf(ocsv,"%s,", outputAdresses);
+
+			char arr5[outputAmount.length() + 1];
+			strcpy(arr5, outputAmount.c_str());
+			fprintf(ocsv,"%s\r\n", arr5);
+    		//fprintf(ocsv,"%s\r\n", outputAmount);
+
 		}
+
+
 
 		printf("==========================================================================================\r\n");
 	}
@@ -9708,11 +9813,14 @@ int sum(int a, int b){
 }
 
 #body
+	ocsv = fopen("/var/lib/HPCCSystems/hpcc-data/thor/output.csv", "w+");
+  fprintf(ocsv,"Computed_Block_Hash,Previous_Block_Hash,Next_Block_Hash,Merkle_Root,Timestamp,Nonce,BlockReward,Transaction_Hash,Input_Addresses,Transaction_Hash_of_Inputs,Input_Amount,Output_Addresses,Output_Amount\r\n");
   const char *dataPath = "data";
 	BlockChainCommand bc(dataPath);
 	bc.process(1) ;
 	bc.process(2) ;
 	bc.process(3) ;
+  fclose(ocsv);
 	return 10;
 
 
