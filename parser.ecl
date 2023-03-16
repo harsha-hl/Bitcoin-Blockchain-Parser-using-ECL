@@ -9813,7 +9813,7 @@ int sum(int a, int b){
 }
 
 #body
-	ocsv = fopen("/var/lib/HPCCSystems/hpcc-data/thor/output.csv", "w+");
+	ocsv = fopen("/var/lib/HPCCSystems/mydropzone/output.csv", "w+");
   fprintf(ocsv,"Computed_Block_Hash,Previous_Block_Hash,Next_Block_Hash,Merkle_Root,Timestamp,Nonce,BlockReward,Transaction_Hash,Input_Addresses,Transaction_Hash_of_Inputs,Input_Amount,Output_Addresses,Output_Amount\r\n");
   const char *dataPath = "data";
 	BlockChainCommand bc(dataPath);
