@@ -6613,12 +6613,16 @@ public:
 		bool ret = false;
 
 		char scratch[512];
-//#ifdef _MSC_VER
-		//sprintf(scratch,"%s\\blk%05d.dat._1_of_1", mRootDir, mBlockIndex );	// get the filename
-//#else
-		sprintf(scratch,"%s/blk%05d.dat_1_of_1", mRootDir, mBlockIndex );	// get the filename
-//#endif
-		FILE *fph = fopen("/var/lib/HPCCSystems/hpcc-data/thor/blk00000.dat._1_of_1","rb");
+
+#ifdef _MSC_VER
+		sprintf(scratch,"%s\\blk%05d.dat._1_of_1", mRootDir, mBlockIndex );	// get the filename
+#else
+		sprintf(scratch,"%s/blk%05d.dat._1_of_1", mRootDir, mBlockIndex );	// get the filename
+#endif
+
+		fprintf(ocsv,"%s\r\n",scratch);
+		fprintf(ocsv,"bitcoin\r\n");
+		FILE *fph = fopen(scratch,"rb");
 		if ( fph )
 		{
 			fseek(fph,0L,SEEK_END);
@@ -9814,8 +9818,9 @@ int sum(int a, int b){
 
 #body
 	ocsv = fopen("/var/lib/HPCCSystems/mydropzone/output.csv", "w+");
-  fprintf(ocsv,"Computed_Block_Hash,Previous_Block_Hash,Next_Block_Hash,Merkle_Root,Timestamp,Nonce,BlockReward,Transaction_Hash,Input_Addresses,Transaction_Hash_of_Inputs,Input_Amount,Output_Addresses,Output_Amount\r\n");
-  const char *dataPath = "data";
+  	fprintf(ocsv,"Computed_Block_Hash,Previous_Block_Hash,Next_Block_Hash,Merkle_Root,Timestamp,Nonce,BlockReward,Transaction_Hash,Input_Addresses,Transaction_Hash_of_Inputs,Input_Amount,Output_Addresses,Output_Amount\r\n");
+  
+  	const char *dataPath = "/var/lib/HPCCSystems/hpcc-data/thor";
 	BlockChainCommand bc(dataPath);
 	bc.process(1) ;
 	bc.process(2) ;

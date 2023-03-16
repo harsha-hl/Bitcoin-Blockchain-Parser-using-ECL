@@ -1,4 +1,4 @@
-blockchain.out: main.cpp
-	g++ main.cpp -o blockchain.out
+blockchain.out: mainCOPY.cpp
+	g++ mainCOPY.cpp -o blockchain.out
 run:	blockchain.out
 	./blockchain.out
