@@ -1,77 +1,11 @@
-Steps To Run
+# Bitcoin-Blockchain-Parser-using-ECL
 
-1. Run "make" to build the executable file for Linux Systems and "mingw32-make" in Windows system.
-2. Run the executable file by passing the directory path with the .blk files. For Example : ./blockchain.out <path-to data folder> 
-3. Set the maximum number of blocks to scan by using "max_blocks <number of blocks> ".
-4. Use the option "scan" to start scanning the number of blocks specified.
-5. Use the option "process" to link input addresses of transactions.
-6. In order the view a particular block's transactions. Use the option "block <block-number>"
+## Steps to Run
 
-![output1](/images/output.png)
-! [output] (images/output.png)
-![output] (images/output.png)
-! [output](images/output.png)
- ![output](/images/output.png)
- <img src="/images/output.png" alt="output" title="block data">
-
-
-This is a minimal C++ code snippet to read the bitcoin block chain one by one into memory.
-
-It is comprised of just two source files; a header file describing the bitcoin blockchain
-data layout and an implementation CPP.  They are, combined, only a few hundred lines of
-source and the bulk of both source files is really just comments.
-
-
-The header file can be browsed here.  BlockChain.h
-
-And the implementation here: BlockChain.cpp
-
-
-This sample contains no code which actually interprets the *meaning* of that data; it just gets
-it loaded into a data structure suitable for further processing.   Most likely in any future
-articles I publish on this topic you will see examples of how to extract the meaning of this
-raw data into data structures suitable for analysis.
-
-
-This code uses no memory allocation, no STL, no BOOST, no containers, and it is only a couple
-of hundreds lines of C++.  It does use hard-coded arrays with fixed limits in their sizes.
-This is because the actual data in the bitcoin blockchain does not ever exceed certain limits;
-so to avoid a great deal of unnecessary memory allocation this parser uses fixed buffers instead.
-
-
-It is also pretty fast though, I suppose, it could be made faster, but not by a lot.  Some people
-might point out that it could be made faster if it cached the source block-chain file but, really,
-virtually all operating systems do that under the hood any way so I doubt it would make much difference.
-As it is, it reads one bitcoin blockchain 'block' into memory at a time, parses the transactions,
-inputs, and outputs, and returns them to the caller.  A person who might use this code snippet would,
-most likely, take this data and convert it into some other more reasonable format for further processing
-and analysis.  At least that's what I plan to do.
-
-
-It is important to note that this code assumes that you are running on a small-endian machine, like
-an X86.  It *does not* run on big-endian machines (like a PowerPC for example).  If you have a big-endian
-machine, what can I say, get a real processor.
-
-
-This code snippet is just a single header file and a single CPP.  In theory it should compile on any platform,
-all you have to do is revise a couple of typedefs at the top of the header to declare the basic int sizes on
-your platform. That's it.  It doesn't use the STL, Boost, or another heavyweight dependencies above and beyond
-standard library type stuff.
-
-
- One problem with Jame's specification is that it's not always super clear what the hierarchy of the input
- data is; I hope that the classes in this header file make this a bit more clear.
-
-
-An important note, a number of the inputs in the blockchain are marked as 'variable length integers'
-(presumably to 'save space' even though they really don't) The variable length integer is capable of being
-as large as 64 bits but, in actuality, never is. That's why all of the integers in the following data structures
-are 32 bits in size instead; simply for the sake of simplicity.  This sample runs just fine compiled for 32 bit.
-
-
-A couple of items; sometimes you can run out of blockchain data before you reach the end of the file.  What
-I discovered is that past a certain point the file just contains zeroes.
-
-
-There are also many cases where the actual data in the block is a lot less than the reported block-length.
-I'm going to assume that this too is normal and expected.
+1. Upload and spray the file ```data/blk00000.dat``` file onto the cluster in blob format. Note that the logical name should also be ```blk00000.dat``` as the parser expects blk files in sequential order. 
+2. This would spray the file in a location similar to ```/var/lib/HPCCSystems/hpcc-data/thor``` folder.
+3. ```parser.ecl``` is the file containing the complete parser and doesn't depend on any external libraries.
+4. Replace the variable ```dataPath``` in ```parser.ecl``` with the path to the *folder* containing the above sprayed ```blk00000.dat``` file.
+5. Finally replace the path to the output.csv file in parser.ecl (Line 9820) as required. Having path to the dropzone is essential to be able to download and view the csv file upon running the parser.
+6. Run the parser.ecl as a workunit by replacing the above paths if needed.
+7. Refresh the dropzone page on ecl watch to be able to view and download the output.csv file.
