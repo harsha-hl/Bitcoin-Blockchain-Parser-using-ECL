@@ -23,7 +23,7 @@
 |`Timestamp`| This column contains the timestamp of when the block was mined. This timestamp is stored as the number of seconds since January 1, 1970, and is used to order blocks chronologically.|N|
 |`Nonce`| This column contains the nonce value used by miners to try to find a valid block hash. Miners iterate over nonce values in order to find a block hash that meets the difficulty requirement set by the Bitcoin network.|N|
 |`BlockReward`| This column contains the reward that the miner who mined the block received. In the early days of Bitcoin, this reward was 50 bitcoins per block, but it has since been halved multiple times and is currently at 6.25 bitcoins per block.|N|
-|`Transaction_Hash`| This column contains the hash of a transaction included in the block. Transactions are included in the block in a specific order, and this hash links the transaction to its place in the block.||N|
+|`Transaction_Hash`| This column contains the hash of a transaction included in the block. Transactions are included in the block in a specific order, and this hash links the transaction to its place in the block.|N|
 |`Input_Addresses`| This column contains the addresses from which the inputs to a transaction were spent. Bitcoin transactions can have multiple inputs, and each input spends the output of a previous transaction.|Y|
 |`Transaction_Hash_of_Inputs`| This column contains the hash of the transaction that created the outputs spent by the inputs of a transaction. This hash links the input to the output that it spent.|Y|
 |`Input_Amount`| This column contains the amount of bitcoin spent by the inputs of a transaction. This amount is the sum of the outputs that the inputs spend.|Y|
