@@ -1,5 +1,8 @@
 # Bitcoin-Blockchain-Parser-using-ECL
 
+![Upload](images/1upload.png)
+
+
 ## Steps to Run
 
 1. Upload and spray the file ```data/blk00000.dat``` file onto the cluster in blob format. Note that the logical name should also be ```blk00000.dat``` as the parser expects blk files in sequential order. 
