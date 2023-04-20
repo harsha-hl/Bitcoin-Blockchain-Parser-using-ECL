@@ -1,4 +1,10 @@
-# Bitcoin-Blockchain-Parser-using-ECL
+# Bitcoin Blockchain Parser-using ECL
+
+This is a Bitcoin Blockchain Parser implemented using C++ and Enterprise Control Language(ECL) for HPCC Systems. It takes a raw blockchain data in the form of blk.dat files as input and processes the headers and transaction data within each block of these files. The Bitcoin parser runs on the distributed and parallelized architecture provided by HPCC Systems leading to higher throughput.
+
+Bitcoin is the biggest and most popular crypto currency having millions of transactions with a block being added every 10 minutes on an average. With the exponential growth of blockchain data over time, having a scalable and robust ECL Bitcoin parser would contribute to swift retrieval of blockchain data with minimum overhead. The proposed implementation provides flexibility as it does not require any external library dependencies and can be run as a single ECL file.
+
+This repo is a fork of the excellent work performed by Jeff Chan. The original can be found at [https://github.com/jeffchan/blockchain-parser](https://github.com/jeffchan/blockchain-parser).
 
 ## Steps to Run the Parser
 
@@ -33,6 +39,14 @@ The following steps and examples have been described by taking a local hpcc clus
 9. Refresh the dropzone page on ecl watch to be able to view and download the ```stats.csv``` file.
 
 ![Stats](images/6stats.png)
+
+## Implementation 
+
+Blockchain is divided into multiple blk.dat files with each file having multiple blocks of the blockchain. Every new block added on the blockchain is appended to the latest blk.dat file. The data in the blk.dat file is stored in binary format. The input to the Bitcoin parser is a set of blk.dat files that are sprayed onto the cluter as a BLOB type file.
+
+The files comprising raw blockchain data that is passed to the parser must be having ordered blocks. The parser segregates the hexadecimal data into blocks based on the magic byte present at the start of each block. Various attributes of the block such as version, Previous block hash, merkle root, timestamp, bits and nonce are extracted from the block header data. 
+
+The parser then processes the transaction data which maps the input addresses to the output addresses of previous transactions and creates a connected network of blocks which resembles the blockchain. Other parameters like the value of the transaction, script signature and transaction hash are also calculated. In this fashion, the parser iterates over the entire chain of blocks and writes the parsed contents onto a csv file.
 
 ## Output Description
 
