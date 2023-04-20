@@ -4,7 +4,7 @@ This is a Bitcoin Blockchain Parser implemented using C++ and Enterprise Control
 
 Bitcoin is the biggest and most popular crypto currency having millions of transactions with a block being added every 10 minutes on an average. With the exponential growth of blockchain data over time, having a scalable and robust ECL Bitcoin parser would contribute to swift retrieval of blockchain data with minimum overhead. The proposed implementation provides flexibility as it does not require any external library dependencies and can be run as a single ECL file.
 
-This repo is a fork of the excellent work performed by Jeff Chan. The original can be found at [https://github.com/jeffchan/blockchain-parser](https://github.com/jeffchan/blockchain-parser).
+This repo is an adaptation of the excellent work performed by Jeff Chan. The original can be found at [https://github.com/jeffchan/blockchain-parser](https://github.com/jeffchan/blockchain-parser).
 
 ## Steps to Run the Parser
 
