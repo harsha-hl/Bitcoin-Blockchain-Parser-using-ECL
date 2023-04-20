@@ -1,4 +1,4 @@
-# Bitcoin Blockchain Parser-using ECL
+# Bitcoin Blockchain Parser using ECL
 
 This is a Bitcoin Blockchain Parser implemented using C++ and Enterprise Control Language(ECL) for HPCC Systems. It takes a raw blockchain data in the form of blk.dat files as input and processes the headers and transaction data within each block of these files. The Bitcoin parser runs on the distributed and parallelized architecture provided by HPCC Systems leading to higher throughput.
 
