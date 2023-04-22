@@ -20,7 +20,7 @@ This repo is an adaptation of the excellent work performed by Jeff Chan. The ori
     * ```git clone https://github.com/harsha-hl/Bitcoin-Blockchain-Parser-using-ECL.git```
     * ```cd Bitcoin-Blockchain-Parser-using-ECL/```
 
-2. blk.dat files that are to be sprayed to the cluster can be found at ```data/``` directory.
+2. blk.dat files that are to be sprayed to the cluster can be found at this [link](https://drive.google.com/drive/folders/1jNt7hwmMSdPGMThNLgeguJXcIC-VjhL-?usp=share_link). **Once downloaded, these blk files need to be moved to ```data/``` directory**.
     * Each of these blk.dat files must be named in sequential order starting from blk00000.dat
     * Input addresses can only be parsed provided they are the output addresses of a previously parsed transaction. Hence, the raw data should either **be ordered** or **all the data until a particular timestamp** should be fed as input.
 
