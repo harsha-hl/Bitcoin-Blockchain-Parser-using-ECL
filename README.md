@@ -6,6 +6,26 @@ Bitcoin is the biggest and most popular crypto currency having millions of trans
 
 This repo is an adaptation of the excellent work performed by Jeff Chan. The original can be found at [https://github.com/jeffchan/blockchain-parser](https://github.com/jeffchan/blockchain-parser).
 
+## Requirements
+
+1. **HPCC Systems Platform** You need to have a HPCC Systems Platform installed on your systems. The steps for installation and setup can be found [here](https://hpccsystems.com/training/documentation/installation-and-administration/).
+
+2. **ECL IDE** or **VS Code with ECL extension** An IDE linked to the HPCC Cluster has to be setup. This can either be an [ECL IDE](https://hpccsystems.com/training/documentation/ecl-ide-and-client-tools/) or VS Code equipped with [ECL extension](https://marketplace.visualstudio.com/items?itemName=hpcc-systems.ecl). In both cases, the HPCC Systems Client Tools need to be installed and can be found [here](https://hpccsystems.com/training/documentation/ecl-ide-and-client-tools/).
+
+3. **ECL Watch** An interface to the HPCC Systems Platform is needed to be able to spray input files to the parser and obtain the output file in the landing zone. Steps for installation of ECL Watch can be found [here](https://hpccsystems.com/training/documentation/ecl-ide-and-client-tools/).
+
+## Using this Module
+
+1. Clone this repo to your local system and change current directory.
+    * ```git clone https://github.com/harsha-hl/Bitcoin-Blockchain-Parser-using-ECL.git```
+    * ```cd Bitcoin-Blockchain-Parser-using-ECL/```
+
+2. blk.dat files that are to be sprayed to the cluster can be found at ```data/``` directory.
+    * Each of these blk.dat files must be named in sequential order starting from blk00000.dat
+    * Input addresses can only be parsed provided they are the output addresses of a previously parsed transaction. Hence, the raw data should either **be ordered** or **all the data until a particular timestamp** should be fed as input.
+
+3. The ECL parser can be found at ```parser.ecl``` file and does not have any additional library dependencies to run.
+
 ## Steps to Run the Parser
 
 The following steps and examples have been described by taking a local hpcc cluster running on Ubuntu 20.04 machine. The same steps apply for any other scenario with the ECL watch being used in the process. No additional libraries need to be installed as they have been integrated into one single file ```parser.ecl```.
