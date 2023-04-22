@@ -6620,8 +6620,8 @@ public:
 		sprintf(scratch,"%s/blk%05d.dat._1_of_1", mRootDir, mBlockIndex );	// get the filename
 #endif
 
-		fprintf(ocsv,"%s\r\n",scratch);
-		fprintf(ocsv,"bitcoin\r\n");
+		//fprintf(ocsv,"%s\r\n",scratch);
+		//fprintf(ocsv,"bitcoin\r\n");
 		FILE *fph = fopen(scratch,"rb");
 		if ( fph )
 		{
