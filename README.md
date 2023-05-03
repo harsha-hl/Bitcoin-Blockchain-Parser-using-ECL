@@ -44,6 +44,8 @@ The following steps and examples have been described by taking a local hpcc clus
 
 ![Input Folder](images/4inputfolder.png)
 
+**Note : In case of University cluster of HPCC, the directory to which file is sprayed can be just ```/var/lib/HPCCSystems/hpcc-data```. Hence make the required modification in the actual parser file.**
+
 4. ```parser.ecl``` is the file containing the complete parser and doesn't depend on any external libraries. This can be run directly on the cluster by making the following changes.
 
 5. Replace the variable ```dataPath``` in ```parser.ecl``` [[Line 9823](https://github.com/harsha-hl/Bitcoin-Blockchain-Parser-using-ECL/blob/master/parser.ecl#L9823)] with the path to the **folder** containing the above sprayed ```blk00000.dat``` file.
